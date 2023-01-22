@@ -2,7 +2,7 @@
 layout: post
 title: "An Exploration of Bootstrapping"
 subtitle: "A simple, yet powerful strategy."
-date: 2023-01-21 23:45:13 -0400
+date: 2023-01-21 13:45:00 -0400
 background: '/img/posts/bootstrap-expl.jpg'
 ---
 
