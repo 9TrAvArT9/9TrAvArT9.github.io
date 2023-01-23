@@ -12,7 +12,7 @@ background: '/img/posts/bootstrap-expl.jpg'
  
  Its often the case, such as a small group of volunteers, that we cannot reasonably make any assumptions about the sampling distribution that aid with inference about our statistic(s). For instance, one may determine the sample mean and standard deviation to contruct a confidence interval to test some hypothesis. There's a lovely formula for this, but this involves the assumption of a normal distirbution. We can't necessarily make this assumption because the Central Limit Theorem only guarantees assymptotic normality for large enough sample sizes. Resampling methods can conveniently circumvent the (often failed) requirements for classical inference, and allow us to make sound conclusions from only a single small sample. Bootstrapping is a simple, yet powerful resampling method that is commonly used. 
 
- Lets start with a simple example to demonstrate the basic idea of bootstrapping. Suppose we run an experiment giving treatment A to a group of 10 volunteers, and a placebo to 10 others. We take some metric $\mu$ which indicates drug performance (higher is 'better'), and compare the average of this metric in the treatment group to that of the control. Suppose this is our data.
+ Lets start with a simple example to demonstrate the basic idea of bootstrapping. Suppose we run an experiment giving treatment A to a group of 10 volunteers, and a placebo to 10 others. We take some metric which indicates drug performance (higher is 'better'), and compare the average of this metric in the treatment group to that of the control, $\theta = \mu_{trt} - \mu_{cnt}$. Suppose this is our data.
  
 
  We arrive at a modestly large
