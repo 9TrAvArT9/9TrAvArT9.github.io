@@ -14,5 +14,3 @@ background: '/img/posts/bootstrap-expl.jpg'
 
  Lets start with a simple example to demonstrate the basic idea of bootstrapping. Suppose we run an experiment giving treatment A to a group of 10 volunteers, and a placebo to 10 others. We take some metric which indicates drug performance (higher is 'better'), and compare the average of this metric in the treatment group to that of the control, \$\theta = \mu_{trt} - \mu_{cnt}\$. Suppose this is our data.
  
-
- We arrive at a modestly large
