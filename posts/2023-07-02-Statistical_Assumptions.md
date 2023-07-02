@@ -1,6 +1,5 @@
 ---
 layout: post
-title: "Commonly Abused Assumptions"
+title: Commonly Abused Assumptions
 background: 'img/posts/Irving_Geis.jpg'
 ---
-
