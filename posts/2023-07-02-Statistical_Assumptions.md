@@ -5,9 +5,7 @@ subtitle: ""
 background: 'img/posts/Irving_Geis.jpg'
 ---
 
-# Application 5
-
-<br>
+## Application 5
 
 The data in Table 5.2 are taken from Hand et. al. and gives scores on
 the Vocabulary subtest of the WAIS-R intelligence test for 54 university
@@ -15,7 +13,7 @@ students. Solely for the purpose of this exercise, we’ll assume the
 students were randomly sampled from a large university population, and
 within this population, the vocabulary scores have an approximately normal cumulative distribution function (cdf).
 However, in reality there is no reason to believe that either of these
-assumptions are true. Let's proceed and observe the consequences of these erroneous assumptions.  <br>
+assumptions are true. Let's proceed and observe the consequences of these erroneous assumptions.  
 
 ``` r
 data5.2 = read.delim("Table5_2.txt", header = T)
@@ -25,7 +23,6 @@ colnames(tab5.2) = rep(" ",18)
 rownames(tab5.2) = rep(" ", 3)
 ```
 
-<br>
 
     ## [1] "Table 5.2: Vocabulary Scores"
 
@@ -34,7 +31,7 @@ rownames(tab5.2) = rep(" ", 3)
     ##   11 13 16 14 12 10 14 11 12 11 16  9 19 12 12 14 15 15
     ##   13 15 10 11 10 14 14 11 13 15 12 16 14 10 13 11 12 11
 
-<br>
+
 
 ## 1. Find an equal tails exculsion 95% confidence interval for the mean of the university population distribution of WAIS-R vocabulary scores using the sample data in Table 5.2. Find a 95% lower bound for the mean from the same data. Interpret this bound
 
@@ -59,9 +56,9 @@ print(paste("alpha=", alpha1))
 
     ## [1] "alpha= 0.025"
 
-<br>
 
-We now find $\mu, \&\ \hat{\sigma}^2$ from our sample data. <br>
+
+We now find $\mu, \&\ \hat{\sigma}^2$ from our sample data. 
 
 ``` r
 xbar1 = mean(data5.2$Scores)
@@ -77,10 +74,10 @@ print(paste("Sigma^2 = ", varx1))
 
     ## [1] "Sigma^2 =  4.37910552061495"
 
-<br>
+
 
 And the quantile score for $F^{-1}_t(0.025)$ from a t-distribution, with
-$54-1 = 53$ degrees of freedom. <br>
+$54-1 = 53$ degrees of freedom. 
 
 ``` r
 Ft1 = qt(alpha1,53,lower.tail = F)
@@ -89,9 +86,9 @@ Ft1
 
     ## [1] 2.005746
 
-<br>
 
-Putting this all together, we have the 95% CI for $\mu$ to be <br>
+
+Putting this all together, we have the 95% CI for $\mu$ to be 
 
 ``` r
 UB1 = xbar1 + sqrt(varx1/n1)*Ft1
@@ -102,14 +99,14 @@ print(paste("[",round(LB1,5),",",round(UB1,5),"]"))
 
     ## [1] "[ 12.29919 , 13.44155 ]"
 
-<br>
+
 
 Thus, we conclude that 95% of the confidence intervals in this exact
 same manner on any sample of the population will contain the true value
-of the population mean. <br>
+of the population mean. 
 
 We will now determine a 95% lower bound for the mean of the same data.
-<br>
+
 
 ``` r
 LB11 = xbar1 - sqrt(varx1/n1)*qt(2*alpha1, 53, lower.tail = F)
@@ -118,12 +115,12 @@ print(paste("[",round(LB11,5),",","infty",")"))
 
     ## [1] "[ 12.39363 , infty )"
 
-<br>
+
 
 We can interpret this as “we are 95% confident that the true population
-mean is greater than 12.3936”. <br>
+mean is greater than 12.3936”. 
 
-#### 2. Find a 95% equal tails exclusion CI for the variance of the population distribution of vocabulary scores sampled in Table 5.2
+## 2. Find a 95% equal tails exclusion CI for the variance of the population distribution of vocabulary scores sampled in Table 5.2
 
 Again, because we’re assuming that we have a random sample from a
 population that is normally distributed, we construct a confidence
@@ -142,19 +139,19 @@ print(paste("[",round(LB2,5),",",round(UB2,5),"]"))
     ## Refereed Publications  0  1  2  3  4  5  6  7  8  9 10
     ## Faculty Members       28  4  3  4  4  2  1  0  2  1  1
 
-<br>
+
 
 **a. Plot the data using a histogram. Describe the shape of the data.**
-<br>
+
 
 ![](test1_files/figure-gfm/unnamed-chunk-10-1.png)<!-- -->
 
 The data display a positive skewness. The majority of the observations
 are a value of 0. In other words, most of the staff in this sample did
-not have any refereed publication. <br>
+not have any refereed publication. 
 
 **b. Estimate the mean number of publications per faculty member, and
-give the SE for your estimate.** <br>
+give the SE for your estimate.** 
 
 Here, our population is the $N= 807$ faculty members at this university.
 Hence, this sample is a simple random sample *without* replacement
@@ -170,10 +167,10 @@ mean(dat_66)
 
     ## [1] 1.78
 
-<br>
+
 
 So we estimate
-$\bar{y} = 1.78 \frac{\text{publications}}{\text{faculty member}}$. <br>
+$\bar{y} = 1.78 \frac{\text{publications}}{\text{faculty member}}$. 
 
 We have the estimated variance of $\bar{y}$ is $$
                     \hat{V}[\bar{y}] = \Big(1 - \frac{n}{N}\Big)\frac{s^2}{n}
@@ -193,25 +190,25 @@ sqrt((1-(50/807))*(var(dat_66)/50))
 $SE[\bar{y}] = \sqrt{\big(1 - \frac{50}{807}\big)\frac{7.1955}{50}} \approx 0.37$.
 
 **c. Do you think that $\bar{y}$ from (b) will be approximately normally
-distributed? Why or why not?** <br>
+distributed? Why or why not?** 
 
 Given that the original sample is so skewed, it is unlikely that the
-sample mean will be normally distributed. <br>
+sample mean will be normally distributed. 
 
 **10. Which of the following SRS designs will give the most precision
 for estimating a population mean? Assume that each population has the
-same value of the population variance** $S^2$.<br>
+same value of the population variance** $S^2$.
 
-1. An SRS of size 400 from a population of size 4000.<br>
+1. An SRS of size 400 from a population of size 4000.
 
-2. An SRS of size 30 from a population of size 300.<br>
+2. An SRS of size 30 from a population of size 300.
 
-3. An SRS of size 3000 from a population of size 300,000,000. <br>
+3. An SRS of size 3000 from a population of size 300,000,000. 
 
 By “most precision”, we mean having the smallest variance. Lets examine
 each samples variance and compare. Note that we are excluding the $S^2$
 from the equation, since it is assumed to be the same for all three
-sample cases. <br>
+sample cases. 
 
 ``` r
 V1 = (1 - (400/4000))*(1/400)
