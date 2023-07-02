@@ -2,7 +2,6 @@
 layout: post
 title: "Commonly Abused Assumptions"
 subtitle: ""
-dat: 2023-07-02 
 background: 'img/posts/Irving_Geis.jpg'
 ---
 
