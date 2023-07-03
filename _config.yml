@@ -16,6 +16,7 @@ linkedin_username: rtravismerrill
 google_analytics:   UA-XXXXXXXXX-X # out your google-analytics code
 
 # Build settings
+future: true
 markdown:           kramdown
 paginate:           5
 paginate_path:      "/posts/page:num/"
