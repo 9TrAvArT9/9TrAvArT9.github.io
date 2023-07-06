@@ -54,11 +54,11 @@ Each of these three diversity have quite different units and mathematical proper
 \end{equation}
 {:/}
 
-**Hill Numbers** are in units of *effective number of speices* and is a function of the parameter $q$. This parameter determines the sensitivity to species relative abundance. The traditional biodiversity metrics can be found with simple transformations and by setting $q$ with *Species Richness (q=0), Gini-Simpson (q=1)*, and *Shannon entropy (q=2)*. It was found that this measurement of diversity obey another principle key in Economics - the *replication principle*: if we pool $N$ equally large, equally diverse communities with NO shared species, the diversity of this pooled community should be $N$ times the diversity of a single community. This now solves the previous problems of ratios and comparisons with the Shannon entropy and Gini-Simpsons indices, and supports the rules of inference used by Biologists. Most recently they have been generalized to incorporate phylogentic distances into their calculations. Hill numbers, or the effective number of species best quantifies certain concepts of diversity, particularly species and taxonomic. Many of the R packages commonly used for diversity analysis make direct use of Hill numbers. 
+**Hill Numbers** are in units of *effective number of speices* and is a function of the parameter $q$. This parameter determines the sensitivity to species relative abundance. The traditional biodiversity metrics can be found with simple transformations and by setting $q$ with *Species Richness (q=0), Gini-Simpson (q=1)*, and *Shannon entropy (q=2)*. It was found that this measurement of diversity obey another principle key in Economics - the *replication principle*: if we pool $N$ equally large, equally diverse communities with NO shared species, the diversity of this pooled community should be $N$ times the diversity of a single community. This now solves the previous problems of ratios and comparisons with the Shannon entropy and Gini-Simpsons indices, and supports the rules of inference used by Biologists. In addition to species richness and relative abundance, Hill numbers have recently been generalized to incorporate phylogentic distances as well. Hill numbers, or the effective number of species best quantifies certain concepts of diversity, particularly species and taxonomic. Many of the R packages commonly used for diversity analysis make direct use of Hill numbers. 
 
 ## Assessing Biodiversity in R
 
-To better understand how we can assess diversity in R, let's consider an example with artificial set of data pertaining to bat species in two ecoregions in subtropical Africa. Our goal is to compare metrics of diversity between the two sites - one site NEAR an inselberg, and another site DISTANT from an inselberg. Bats were captured, tagged, and number of variables recorded. Here's a glimpse at some of the data...
+To better understand how we can assess diversity in R, let's consider an example with artificial set of data pertaining to bat species in from ten sites in subtropical Africa. Sites 1-6 are geographically close to an inselberg structure, while sites 7-10 are distant, but close to each other. Our goal is to compare metrics of diversity between the two transects - one NEAR the inselberg, and another DISTANT from the inselberg. At each site, bats were captured, tagged, and number of variables recorded. Here's a glimpse at some of the data...
 
 ![](/img/posts/batdata.png){: width="700" style="display:block; margin-left:auto; margin-right:auto"}
 
@@ -70,7 +70,7 @@ Here we can observe six of the 36 species used in this study, along with several
 
 ![](/img/posts/abuntable1.png){: width = "400" style="display:block; margin-left:auto; margin-right:auto"}
 
-The abundance matrix used in this study contains the species counts for all species found in each transect - NEAR and FAR. iNEXT is conveniently equipped with the ggiNEXT() function, which is an extension of the familiar and loved ggplot2 package. 
+The abundance matrix used in this study contains the species counts for all species found in each transect - NEAR and FAR. iNEXT is conveniently equipped with the ggiNEXT() function, which is an extension of the familiar and loved ggplot2 package. We begin by plotting a sample-size based R/E curve. These types of R/E curves computes diversity estimates for rarefied and extrapolated samples up to double the reference sample. 
 
 ```{r}
 library(iNEXT);
@@ -93,10 +93,62 @@ names(abund.inselberg) <- c("NEAR","FAR");
 #By default, q = 0 
 
 inselberg.dist <- iNEXT(abund.total, q = c(0,1,2), datatype = 'abundance');
-#Type = 1 is a simple R/E curve, se=TRUE displays 95% confidence bands
+#Type = 1 is a sample-size based R/E curve, se=TRUE displays 95% confidence bands
 ggiNEXT(inselberg.dist, type = 1, se = TRUE)
 ```
 Which can be formatted to display the following plot
 ![](/img/posts/REexample.png){: style="display:block; margin-left:auto; margin-right:auto" }
 
-We observe estimates for all three of the most common 
+We can now easily compare the three common metrics of taxonomic diversity. From the plots, we observe estimated measures to be consistently larger in the 'NEAR' inselberg data. However, these findings are not deemed statistically significant due to the apparent overlap in the bootstrapped 95% confidence bands. 
+
+In addition to we can plot coverage-based R/E curves, which calculates diversity estimates for rarefied and extrapolated samples with sample completeness (sample coverage). This way we can compare equally-complete samples, since Hill number estimates are sensitive to sampling coverage.  
+
+```{r}
+#Type = 3 for coverage-based R/E curve
+ggiNEXT(inselberg.dist, type = 3, se = TRUE)
+```
+
+![](/img/posts/smplcoverage.png){: style="display:block; margin-left:auto; margin-right:auto" }
+
+These plots allow us to understand the nature of our estimates as our sampling coverage becomes more complete. As mentioned, complete sampling coverage is nearly impossible, particularly in species rich areas. To link the sample-sized based and coverage-based sampling curves, it is informative to examine the sample completeness curve as follows.
+
+```{r}
+#Type = 2 for sampling completness
+ggiNEXT(inselberg.dist, type = 2, se = TRUE)
+```
+
+![](/img/posts/sampcompl.png){: style="display:block; margin-left:auto; margin-right:auto" height = "100"}
+
+The nature of these curves tell us the ecoregion near the inselberg has greater potential for numerous individuals. 
+
+The iNEXT package also has convenient functions for tabular display of output information from the  iNEXT object. 
+
+```{r}
+inselberg.dist$AsyEst
+```
+
+![](/img/posts/esttable.png){: style="display:block; margin-left:auto; margin-right:auto"}
+
+### Functional Diversity 
+
+Functional diversity is based on the use of functional species traits which are defined as biological attributes that influence organismal performance. This aims at taking a functional approach to community ecology, *independent of taxonomy*. A step beyond species richness, functional diversity is a powerful tool to link community composition to ecosystem properties. Typically, we split functional diversity into three independent facets - Richness, Evenness, and Divergence, as proposed by Villéger, et. al. 
+
+Here, our data contain many previously mentioned functional characteristics of our bat species, such as body weight, roosting strategy, and foraging range. The R package **fundiversity** is designed to ease the ease tee computational burden of classical indices of functional diversity. Each function available in this package computes a single index with two main inputs - a species by traits matrix and a site by species matrix. 
+
+A species by traits matrix is structured to have species as the row names and funtional traits as the columns. A site by species matrix is designed to have sites by row and species by column. This is demonstrated below for our data. 
+
+<center>
+<figure>
+<img src = '/img/posts/sptrt.png' width = "500"/>
+<figcaption>Species by Traits</figcaption>
+</figure>
+</center>
+<br>
+
+<center>
+<figure>
+<img src = '/img/posts/sitesp.png' width = "750">
+<figcaption>Site by Species </figcaption>
+</figure>
+</center>
+
