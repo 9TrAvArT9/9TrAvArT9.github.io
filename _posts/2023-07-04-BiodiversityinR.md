@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Analyzing Biodiversity in R
-subtitle: How R Makes it Easy to Understand Biodiversity 
+subtitle: How R Makes it Easy to Assess Biodiversity 
 date: '2023-07-04 12:47:00 -08:00'
 background: '/img/posts/biodiversity.png'
 full-width: true
@@ -10,7 +10,7 @@ full-width: true
 <style type="text/css">
   p {
     width: 900px;
-  }
+  }∏
 </style>
 
 ## What is Biodiversity?
@@ -64,7 +64,7 @@ To better understand how we can assess diversity in R, let's consider an example
 
 Here we can observe six of the 36 species used in this study, along with several variables pertaining to functional diversity, such as Foraging Mode, and Roosting. Don't worry about how to interpret any particular scores in this data set just yet. Instead, let's begin by examining Taxonomic diversity between the transects. 
 
-### Taxonomic Diversity 
+### Alpha Taxonomic Diversity 
 
 **iNEXT** (INterpolation and EXTrapolation) is a package in R that provides simple functions to compute estimates of Hill numbers with their associated R/E (rarefaction/extrapolation) curves. *Abundance* data, a type of biodiversity data, is used by iNEXt to make these calculations. This is essentially a list of the total count of each species observed, and accepted as a matrix input. A glimpse at the abundance matrix of our total sample data is shown below. 
 
@@ -129,9 +129,11 @@ inselberg.dist$AsyEst
 
 ![](/img/posts/esttable.png){: style="display:block; margin-left:auto; margin-right:auto"}
 
-### Functional Diversity 
+### Alpha Functional Diversity 
 
 Functional diversity is based on the use of functional species traits which are defined as biological attributes that influence organismal performance. This aims at taking a functional approach to community ecology, *independent of taxonomy*. A step beyond species richness, functional diversity is a powerful tool to link community composition to ecosystem properties. Typically, we split functional diversity into three independent facets - Richness, Evenness, and Divergence, as proposed by Villéger, et. al. 
+
+Functional richness can be thought of as the amount of niche space occupied by the species within a community. Functional evenness is considered a measure of the regularity of the distribution of functional richness within this niche space. Alternatively, functional divergence refers to the divergence of the distribution of functional richness in this common space. 
 
 Here, our data contain many previously mentioned functional characteristics of our bat species, such as body weight, roosting strategy, and foraging range. The R package **fundiversity** is designed to ease the ease tee computational burden of classical indices of functional diversity. Each function available in this package computes a single index with two main inputs - a species by traits matrix and a site by species matrix. 
 
@@ -152,3 +154,269 @@ A species by traits matrix is structured to have species as the row names and fu
 </figure>
 </center>
 
+We are now ready to use the fundiversity package. Let's first calculate the functional richness for each site. So we have
+
+```{r}
+#Species by Traits matrix
+traits_bats <- matrix(c(data$Body.Mass,data$Roosting,...), byrow = F,
+                      nrow = nrow(data)));
+rownames(traits_bats) <- c(data$Species);
+colnames(traits_bats) <- c("Body Mass", "Roosting",...);
+
+Species by Site function 
+SpSiteOccMat <- function(data,Site = NULL,Species = NULL){
+  pop = c();
+  rowlist = c(unique(data$Site));
+  collist = c(unique(data$Species));
+  i=1;
+  while (i<=length(rowlist)) {
+    dfuse = data %>% dplyr::filter(Site == rowlist[i]);
+    j=1;
+    while(j<=length(collist)){
+      add = ifelse(collist[j] %in% c(dfuse$Species), 1, 0);
+      pop = c(pop,add);
+      j=j+1
+    }
+    i=i+1
+  }
+  OccMat = matrix(pop, nrow = length(rowlist),
+                  ncol = length(collist),
+                  byrow = TRUE);
+  colnames(OccMat) = collist;
+  rownames(OccMat) = rowlist
+  return(as.data.frame(OccMat))
+}
+
+sites_bat <- SpSiteOccMat(data);
+
+#Calculates functional richness 
+dplyr::arrange(fd_fric(traits_bat, sites_bat),FRic)
+```
+
+<center>
+<figure>
+<img src = "/img/posts/fricpic.png" width = 150 >
+</figure>
+</center>
+
+We clearly see differences in the magnitude of functional richness estimates. Unlike iNEXT with taxonomic diversity estimates, fundiversity does not have a built-in bootstrapping feature to make inference. That being, we will construct our own bootstrapped distribution on each site and construct 95% confidence intervals for comparison. To construct this bootstrapped distribution, we will repeatedly sample from our data, *with replacement*, and probabilities proportional to the relative abundance of each species within the study. More refined methods of bootstrapping based on relative abundance from each site ma improve methods. We briefly display the relative proportions. 
+
+<center>
+<figure>
+<img src = "/img/posts/relabun.png" width = 350 >
+</figure>
+</center>
+And develop the bootstrapped distribution, with B = 1000 samples each of size n =100. The following code generates a $36\times1000$ matrix. Each column represents a sample of our 36 species of bats. In each sample of $n=100$, if a bat species was selected more than once, it remained a '1' as a count matrix. From this counts matrix, we sampled species from our species by traits matrix, and used this calculate the new FRic metric. 
+```{r}
+3Establishing the multinomial sampling distribution
+B = 1000;
+n = 100;
+
+boot.multi.dist <- rmultinom(B, n, prob = c(rel_abun$Rel_Abun))
+
+i = 1;
+while (i <= B) {
+  j = 1;
+  while (j <= 36) {
+    boot.multi.dist[j,i] = ifelse(boot.multi.dist[j,i] >=1, 1, 0);
+    j = j+1;
+  }
+  i = i+1
+}
+
+#Bootstrap disrtibution of functional richness
+
+boot.est.dist <- data.frame();
+i = 1;
+while (i <= ncol(boot.multi.dist)) {
+  boot.traits <- traits_bats[as.logical(boot.multi.dist[,i]),];
+  boot.traits.scale <- scale(boot.traits, center = T, scale = T);
+  boot.fun.rich.est <- fd_fric(boot.traits.scale, site_sp_bat);
+  boot.est.dist <- rbind(boot.est.dist, boot.fun.rich.est);
+  i = i+1
+}
+
+#Instead of typical boxplots, we will use 95% boxplots to make visual inference. 
+quantiles_95 <- function(x) {
+  r <- quantile(x, probs=c(0.01, 0.05, 0.5, 0.95, 1.0))
+  names(r) <- c("ymin", "lower", "middle", "upper", "ymax")
+  r
+}
+ggplot(data = boot.est.dist, aes(x = site,y = FRic, color = site)) + 
+  stat_summary(fun.data = quantiles_95, geom = "boxplot") + 
+  labs(title = "95% Percentile Bootstrap Functional Richness by Site") +
+  xlab("Site") + ylab("Functional Richness")
+```
+
+<center>
+<figure>
+<img src = "/img/posts/funrichbox.png">
+</figure>
+</center>
+We observe that there is overlap in the 95% intervals, indicating there is no significant difference in functional richeness between sites. We can pool the data by transect and observe similar results.
+<center>
+<figure>
+<img src = "/img/posts/funrichtrans.png">
+</figure>
+</center>
+
+Again, we observe overlap in the plots and cannot conclude any significant difference in functional richness between transects near the inselberg and distant from the inselberg. 
+
+We follow a similar logic and present graphs for functional evenness and divergence. 
+
+<center>
+<figure>
+<img src = "/img/posts/funevensite.png">
+</figure>
+</center>
+
+<center>
+<figure>
+<img src = "/img/posts/funeventrans.png">
+</figure>
+</center>
+
+<center>
+<figure>
+<img src = "/img/posts/fundivsite.png">
+</figure>
+</center>
+
+<center>
+<figure>
+<img src = "/img/posts/fundivtrans.png">
+</figure>
+</center>
+
+From these we observe no significant difference in functional divergence indices. Regardless, we have gained useful insight into the nature of these estimates at given sites and transects. 
+
+### Beta Diversity
+
+Beta diversity is generally thought of as the variation in species composition between sites. It can be the result of species replacement between sites (turnover) and species loss from site to site (nestedness). We can use the **betapart** package in R to compute total dissimilarity (Beta diversity) as Sørensen or Jaccard indices, as well as their respective turnover and nestedness components. With the *betasample()* function, we can establish a distribution of multi-site beta dissimilarity values from a randomized sample, and partition total dissimilarity into the independent turnover and nestedness components. The code and results for comparing the two inselberg transects are displayed below. 
+
+```{r}
+#Establish species by site matrices for each transect
+beta.near <- SpSiteOccMat(dataNEAR);
+beta.far <- SpSiteOccMat(dataFAR);
+
+beta.near.samp <- beta.sample(beta.near.core,
+                            sites = 6,
+                            samples = 1000);
+beta.far.samp <- beta.sample(beta.far.core,
+                            sites = 4,
+                            samples = 1000);
+
+beta.dist.near <- beta.near.samp$sampled.values;
+beta.dist.far <- beta.far.samp$sampled.values;
+
+#Plot the beta dissimilariy and component sampling distributions
+par(mar=c(5, 4, 5, 11), xpd=TRUE);
+
+plot(density(dist.near$beta.SOR),
+     xlim = c(0,0.8), ylim = c(0,75),
+     xlab = 'Beta diversity', main = 'Figure 11: Beta Diversity within Transects', lwd = 1, col = "firebrick2");
+lines(density(dist.near$beta.SNE), col = "firebrick2",lty=3,lwd=2);
+lines(density(dist.near$beta.SIM), col = "firebrick2",lty=2, lwd=2);
+
+lines(density(dist.far$beta.SOR), col = 'dodgerblue1', lwd=3);
+lines(density(dist.far$beta.SNE), col = 'dodgerblue1', lty = 3, lwd=3);
+lines(density(dist.far$beta.SIM), col = 'dodgerblue1', lty = 2, lwd =3);
+
+legend("topright", inset=c(-.5, -.1), legend=c(expression(beta[ TOT]),expression(beta[ NEST]),expression(beta[ TURN])), lty=c(1,2,3), title="Beta Diversity");
+legend("bottomright", inset=c(-.4, .1), legend=c("near", "far"),col = c("firebrick2","dodgerblue1"), pch=20)
+```
+<center>
+<figure>
+<img src = "/img/posts/betadiv.png">
+</figure>
+</center>
+
+We can see that difference in total beta dissimilarity may be significant, as the distributions do not appear to overlap. It seems as though total beta diversity is higher in the sites near the inselberg, but we may want to implement a bit of integral analysis to determine overlapping areas and conclude for sure the level of significance. It appeats to be the same case for turnover between the two transects. However, the distibutions of nestedness obviously overlap, so we can conclude there is no significant difference of nestedness among sites between the two transects. Finally, we can observe that the majority of beta dissimilarity between sites at each transect is explained by turnover, instead of nestedness. It is noteworthy that both transects display this pattern so similarly. 
+
+### Alpha Phylogenetic Diversity 
+
+I saved this diversity metric for the end, because we are going to step away from our bat example to demonstrate these methods. This is because metrics of this diversity primarily involve calculating phylogenetic distances of species. This distance is essentially the relative length on an evolutionary tree. Resources, such as GenBank and datasets in R, often provide the genetic information necessary to build these phylogeny trees. However, this data was not available yet for the species pertaining to our previous example. As of now, this is not particularly uncommon as the bank of ecophylogenetic information is still expanding. Instead, we will use a general dataset called "phylocom" provided in the R package **picante**. This package includes functions for analyzing the phylogenetic and trait diversity of ecological communities, comparative analyses, and the display and manipulation of phenotypic and phylogenetic data.
+
+Phylocom contains samples of three objects types accepted by picante. The first, 'phylo', is phylogenetic data called a *phylo* object in R. Picante uses the *phylo* format implemented in the **ape** package in R to represent phylogenetic relationships among given taxa. Let's take a quick peak at the information contained in this type of data.
+
+```
+Phylogenetic tree with 32 tips and 31 internal nodes.
+
+Tip labels:
+  sp1, sp2, sp3, sp4, sp5, sp6, ...
+Node labels:
+  A, B, C, D, E, F, ...
+
+Rooted; includes branch lengths.
+```
+From this, one can establish and plot a phylogenetic tree. Phylocom also contains community data, as formatted in the package **vegan**. Named 'sample', this is data matrix with sites/samples in the rows and taxa in the columns, like the aforementioned species by site presence/absence matrices. We must be sure that these column taxa names exactly match those of the species found in the corresponding phylogenetic data. Finally, our third element called 'traits' is traits data as we have already seen - taxa in rows and community traits in columns. Again, we wary of matching species names. If we choose, we can now visulize the provided data. 
+
+We can visualize how taxa from six communities in this data set are arranged on the tree. First, we need to prune the phylogeny to only include the species at hand. Let's examine the 'sample' data dendrogram, where black dots represent species present in each of the six sommunty samples. 
+
+```{r}
+#Prune the tree
+prunedphy <- prune.sample(comm, phy);
+
+par(mfrow=c(2,3));
+
+for (i in row.names(comm)) {
+  plot(prunedphy, show.tip.label = FALSE, main = i)
+  tiplabels(tip = which(prunedphy$tip.label %in% names(which(comm[i,] > 0))),
+            pch = 19, cex = 2)
+}
+```
+<center>
+<figure>
+<img src = "/img/posts/phyex1.png">
+</figure>
+</center>
+
+Now, let's compute phylogenetic diversity with the Faith's (1992) PD index, which is defined as the total branch length spanned by the tree including all taxa in a local community. 
+
+```{r}
+pd(comm, phy, include.root = T)
+```
+
+<center>
+<figure>
+<img src = "/img/posts/PD.png" width = 750>
+</figure>
+</center>
+
+The column 'PD' presents our Faith estimates, and 'SR' is the species richness. 
+
+Alternatively, we can consider phylogenetic diversity as a form of species pairwise relatedness - take the average pair of individuals in a comminity and determine how genetically related they are. Metrics of community phylogenetic structure, such as mean pairwise distance (MPD), mean nearest taxon distance (MNTD), exist to analyze this type of phylogenetic diversity. Again, picante provides convenient functions to estimate these. Note the use of the 'cophenetic()' function, which converts a *phylo* object into a phylogenetic distance matrix. 
+
+```{r}
+phydist <- cophenetic(phy);
+
+MPD <- ses.mpd(comm, phydist, null.model = "taxa.labels",
+                abundance.weighted = F, runs = 99)
+MPD
+```
+
+<center>
+<figure>
+<img src = "/img/posts/MPD.png" width = 750>
+</figure>
+</center>
+
+Here, 'SES' refers to the standardized effect size is a measure of the differences of the observed genetic relatedness to a null model of phylogeny generated with some randomness. Several different null models exist to generate such measures. 
+
+```{r}
+MNTD < - ses.mntd(comm, phydist, null.model = "taxa.labels",
+              abundance.weighted = F, runs = 99)
+MNTD
+```
+<center>
+<figure>
+
+<img src = "/img/posts/mntd.png" width = 750>
+</figure>
+</center>
+
+Clearly, previously used methods of bootstrapping can be used for comparison inference, but we will spare the reader from this repedetiveness. 
+
+## Conclusions
+
+Hopefully this article has clarified what biodiversity actually means, how we may measure and assess it, and how R packages can greatly facilitate the analysis and discovery of biodiversity patterns from raw biological data. Biodiversity of ecoregions is a major factor taken into consideration when allocating resources for conservation efforts. Thus, it is crucial to have a solid understanding of diversity metrics and methods of analysis. Many of the metrics discussed in this article, such as Hill numbers, have only been developed in the past few decades. Hence, biodiversity assessment and analysis is an ever-evolving field as the underlying theories and mathematics graduate to incorporate more facets. Thank you so much for your time and please feel free to reach out to me! 
