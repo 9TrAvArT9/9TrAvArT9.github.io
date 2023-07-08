@@ -250,13 +250,13 @@ ggplot(data = boot.est.dist, aes(x = site,y = FRic, color = site)) +
 
 <center>
 <figure>
-<img src = "/img/posts/funrichbox.png">
+<img src = "/img/posts/funrichbox.png" width = 750>
 </figure>
 </center>
 We observe that there is overlap in the 95% intervals, indicating there is no significant difference in functional richeness between sites. We can pool the data by transect and observe similar results.
 <center>
 <figure>
-<img src = "/img/posts/funrichtrans.png">
+<img src = "/img/posts/funrichtrans.png" width = 750>
 </figure>
 </center>
 
@@ -266,25 +266,25 @@ We follow a similar logic and present graphs for functional evenness and diverge
 
 <center>
 <figure>
-<img src = "/img/posts/funevensite.png">
+<img src = "/img/posts/funevensite.png" width = 750>
 </figure>
 </center>
 
 <center>
 <figure>
-<img src = "/img/posts/funeventrans.png">
+<img src = "/img/posts/funeventrans.png" width = 750>
 </figure>
 </center>
 
 <center>
 <figure>
-<img src = "/img/posts/fundivsite.png">
+<img src = "/img/posts/fundivsite.png" width = 750>
 </figure>
 </center>
 
 <center>
 <figure>
-<img src = "/img/posts/fundivtrans.png">
+<img src = "/img/posts/fundivtrans.png" width = 750>
 </figure>
 </center>
 
