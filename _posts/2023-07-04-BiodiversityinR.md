@@ -41,7 +41,7 @@ Another property of an ecosystem that behaves similarly is the probability of th
 \begin{align} \textit{Where each species is indexed $i = 1,2,\cdots, S$ with relative abundance $p_i$} \end{align}
 {:/}  
                                             
-Each of these three diversity have quite different units and mathematical properties, so cannot be directly compared with each other. Additionally, comparisons and ratios of the same index could be misleading, as both the Shannon and Simpson indices are non-linear. In the late 1990s, master formulas that generated each of these diversity indices began appearing from varying disciplines. A key breakthrough came from Ecologist Mark Hill, who realized that all these master formulas could be transformed so that they generate a family of measures with an easily interpretable metric. 
+Each of these three diversity measures have quite different units and mathematical properties, so they cannot be directly compared with each other. Indeed, comparisons and ratios of the same index on two samples could be misleading, as both the Shannon and Simpson indices are non-linear. In the late 1990s, master formulas that generated each of these diversity indices began appearing from varying disciplines. A key breakthrough came from Ecologist Mark Hill, who realized that all these master formulas could be transformed so that they generate a family of measures with an easily interpretable metric. 
 
 ### Hill Numbers 
 
@@ -54,11 +54,11 @@ Each of these three diversity have quite different units and mathematical proper
 \end{equation}
 {:/}
 
-**Hill Numbers** are in units of *effective number of speices* and is a function of the parameter $q$. This parameter determines the sensitivity to species relative abundance. The traditional biodiversity metrics can be found with simple transformations and by setting $q$ with *Species Richness (q=0), Gini-Simpson (q=1)*, and *Shannon entropy (q=2)*. It was found that this measurement of diversity obey another principle key in Economics - the *replication principle*: if we pool $N$ equally large, equally diverse communities with NO shared species, the diversity of this pooled community should be $N$ times the diversity of a single community. This now solves the previous problems of ratios and comparisons with the Shannon entropy and Gini-Simpsons indices, and supports the rules of inference used by Biologists. In addition to species richness and relative abundance, Hill numbers have recently been generalized to incorporate phylogentic distances as well. Hill numbers, or the effective number of species best quantifies certain concepts of diversity, particularly species and taxonomic. Many of the R packages commonly used for diversity analysis make direct use of Hill numbers. 
+**Hill Numbers** are in units of *effective number of species* and is a function of the parameter $q$. This parameter determines the sensitivity to species relative abundance. The traditional biodiversity metrics can be found with simple transformations and by setting $q$ with *Species Richness (q=0), Gini-Simpson (q=1)*, and *Shannon entropy (q=2)*. It was found that this measurement of diversity obey another principle key in Economics - the *replication principle*: if we pool $N$ equally large, equally diverse communities with NO shared species, the diversity of this pooled community should be $N$ times the diversity of a single community. This now solves the previous problems of ratios and comparisons with the Shannon entropy and Gini-Simpsons indices, and supports the rules of inference used by Biologists. In addition to species richness and relative abundance, Hill numbers have recently been generalized to incorporate phylogentic distances as well. Hill numbers, or the effective number of species best quantifies certain concepts of diversity, particularly species and taxonomic. Many of the R packages commonly used for diversity analysis make direct use of Hill numbers. 
 
 ## Assessing Biodiversity in R
 
-To better understand how we can assess diversity in R, let's consider an example with artificial set of data pertaining to bat species in from ten sites in subtropical Africa. Sites 1-6 are geographically close to an inselberg structure, while sites 7-10 are distant, but close to each other. Our goal is to compare metrics of diversity between the two transects - one NEAR the inselberg, and another DISTANT from the inselberg. At each site, bats were captured, tagged, and number of variables recorded. Here's a glimpse at some of the data...
+To better understand how we can assess diversity in R, let's consider an example with artificial set of data pertaining to bat species in from ten sites in subtropical Africa. Sites 1-6 are geographically clustered near an inselberg structure, while sites 7-10 are distant, but close to each other. Our goal is to compare metrics of diversity between the two general transects - one NEAR and another DISTANT from the inselberg. At each site, bats were captured, tagged, and number of variables recorded. Here's a glimpse at some of the data...
 
 ![](/img/posts/batdata.png){: width="700" style="display:block; margin-left:auto; margin-right:auto"}
 
@@ -119,7 +119,7 @@ ggiNEXT(inselberg.dist, type = 2, se = TRUE)
 
 ![](/img/posts/sampcompl.png){: style="display:block; margin-left:auto; margin-right:auto" height = "100"}
 
-The nature of these curves tell us the ecoregion near the inselberg has greater potential for numerous individuals. 
+The nature of these curves tell us the ecoregion near the inselberg has greater potential for numerous individuals or the same or differing species. 
 
 The iNEXT package also has convenient functions for tabular display of output information from the  iNEXT object. 
 
@@ -135,7 +135,7 @@ Functional diversity is based on the use of functional species traits which are 
 
 Functional richness can be thought of as the amount of niche space occupied by the species within a community. Functional evenness is considered a measure of the regularity of the distribution of functional richness within this niche space. Alternatively, functional divergence refers to the divergence of the distribution of functional richness in this common space. 
 
-Here, our data contain many previously mentioned functional characteristics of our bat species, such as body weight, roosting strategy, and foraging range. The R package **fundiversity** is designed to ease the ease tee computational burden of classical indices of functional diversity. Each function available in this package computes a single index with two main inputs - a species by traits matrix and a site by species matrix. 
+Here, our data contain many previously mentioned functional characteristics of our bat species, such as body weight, roosting strategy, and foraging range. The R package **fundiversity** is designed to ease the ease the computational burden of classical indices of functional diversity. Each function available in this package computes a single index with two main inputs - a species by traits matrix and a site by species matrix. 
 
 A species by traits matrix is structured to have species as the row names and funtional traits as the columns. A site by species matrix is designed to have sites by row and species by column. This is demonstrated below for our data. 
 
@@ -199,7 +199,7 @@ dplyr::arrange(fd_fric(traits_bat, sites_bat),FRic)
 </figure>
 </center>
 
-We clearly see differences in the magnitude of functional richness estimates. Unlike iNEXT with taxonomic diversity estimates, fundiversity does not have a built-in bootstrapping feature to make inference. That being, we will construct our own bootstrapped distribution on each site and construct 95% confidence intervals for comparison. To construct this bootstrapped distribution, we will repeatedly sample from our data, *with replacement*, and probabilities proportional to the relative abundance of each species within the study. More refined methods of bootstrapping based on relative abundance from each site ma improve methods. We briefly display the relative proportions. 
+We clearly see differences in the magnitude of functional richness estimates. Unlike iNEXT with taxonomic diversity estimates, fundiversity does not have a built-in bootstrapping feature to make inference. So, we will construct our own bootstrapped distribution on each site and construct 95% confidence intervals for comparison. To construct this bootstrapped distribution, we will repeatedly sample from our data, *with replacement*, and probabilities proportional to the relative abundance of each species within the study. More refined methods of bootstrapping based on relative abundance from each site may improve methods. We briefly display the relative proportions. 
 
 <center>
 <figure>
@@ -331,7 +331,7 @@ legend("bottomright", inset=c(-.4, .1), legend=c("near", "far"),col = c("firebri
 </figure>
 </center>
 
-We can see that difference in total beta dissimilarity may be significant, as the distributions do not appear to overlap. It seems as though total beta diversity is higher in the sites near the inselberg, but we may want to implement a bit of integral analysis to determine overlapping areas and conclude for sure the level of significance. It appeats to be the same case for turnover between the two transects. However, the distibutions of nestedness obviously overlap, so we can conclude there is no significant difference of nestedness among sites between the two transects. Finally, we can observe that the majority of beta dissimilarity between sites at each transect is explained by turnover, instead of nestedness. It is noteworthy that both transects display this pattern so similarly. 
+We can see that difference in total beta dissimilarity may be significant, as the distributions do not appear to overlap. It seems as though total beta diversity is higher in the sites near the inselberg, but we may want to implement a bit of integral analysis to determine overlapping areas and conclude for sure the level of significance. It appears to be the same case for turnover between the two transects. However, the distibutions of nestedness obviously overlap, so we can conclude there is no significant difference of nestedness among sites between the two transects. Finally, we can observe that the majority of beta dissimilarity between sites at each transect is explained by turnover, instead of nestedness. It is noteworthy that both transects display this pattern so similarly. 
 
 ### Alpha Phylogenetic Diversity 
 
@@ -385,7 +385,7 @@ pd(comm, phy, include.root = T)
 
 The column 'PD' presents our Faith estimates, and 'SR' is the species richness. 
 
-Alternatively, we can consider phylogenetic diversity as a form of species pairwise relatedness - take the average pair of individuals in a comminity and determine how genetically related they are. Metrics of community phylogenetic structure, such as mean pairwise distance (MPD), mean nearest taxon distance (MNTD), exist to analyze this type of phylogenetic diversity. Again, picante provides convenient functions to estimate these. Note the use of the 'cophenetic()' function, which converts a *phylo* object into a phylogenetic distance matrix. 
+Alternatively, we can consider phylogenetic diversity as a form of species pairwise relatedness - take the average pair of individuals in a community and determine how genetically related they are. Metrics of community phylogenetic structure, such as mean pairwise distance (MPD), mean nearest taxon distance (MNTD), exist to analyze this type of phylogenetic diversity. Again, picante provides convenient functions to estimate these. Note the use of the 'cophenetic()' function, which converts a *phylo* object into a phylogenetic distance matrix. 
 
 ```{r}
 phydist <- cophenetic(phy);
@@ -415,7 +415,7 @@ MNTD
 </figure>
 </center>
 
-Clearly, previously used methods of bootstrapping can be used for comparison inference, but we will spare the reader from this repedetiveness. 
+Clearly, previously used methods of bootstrapping can be used for comparison inference, but we will spare the reader from this monotony. 
 
 ## Conclusions
 
