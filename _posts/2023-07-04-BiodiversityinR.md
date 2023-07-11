@@ -29,11 +29,12 @@ Additionally, we may also consider the *alpha* (within) and *beta* (between) div
 
 ## How Do We Measure Biodiversity?
 
-When Biologists first started talking about diversity, they were simply referring to the number of species in a community, also known as the *species richness*. It was soon realized in practice that accurately measuring species richness is a time consuming and difficult task. Indeed, it is nearly impossible to capture or observe *every* type of species in a community, particularly in areas with high richness, where many species are rare. Despite this, **Species Richness** is still an exceedingly important parameter in biodiversity, and is often used to prioritize land usage. 
+When Biologists first started talking about diversity, they were simply referring to the number of species in a community, also known as the *species richness*. It was soon realized that in practice accurately measuring species richness is a time-consuming and difficult task. Indeed, it is nearly impossible to capture or observe *every* type of species in a community. This is espeically true in areas with high species richness, where individuals may be very rare. Despite this, **Species Richness** is still an exceedingly important parameter in assessing biodiversity, and is often taken into consideration when prioritizing land usage. 
 
-There are many applications where in which a simple (lower-bound) estimate of species count is insufficient. After all, a forrest of pine trees with one maple, is ecologically quite different from a maple forest with one pine. Hence, Biologists needed to incorporate *relative abundance* into diversity metrics. The idea being that diversity is maximized when all species are equally common, and minimum when all but one species are exceedingly rare, decreasing as species head to extinction. Considering these features, and borrowing from concepts in Economics, the *Pigou-Dalton principle of transfer* was introduced to biological systems. The notion being, for a fixed number of individuals, diversity should increase when abundance is transferred from one species to another strictly rarer species, or when any new vanishingly rare species is added. All of this culminated into a new diversity measure called the **Gini-Simpson Index**, which is calculated as the probability that when two individuals randomly encounter each other, they be different species. The probability of an inter-specific encounter obeys the principle of transfer and can be used to measure the compositional complexity of an ecosystem. 
+There are many applications in which a simple lower-bound estimate of species count is insufficient. After all, a forrest of pine trees with one maple, is ecologically very different from a maple forest with one pine. Hence, Biologists needed to incorporate *relative abundance* into diversity metrics. The idea being that diversity is maximized when all species are equally common, and at a minimum when all but one species are exceedingly rare, decreasing as species head to extinction. Considering all these features while borrowing from concepts in Economics, the *Pigou-Dalton principle of transfer* was introduced into complex biological systems. In other words, for a fixed number of individuals, diversity should increase when abundance is transferred from one species to another strictly rarer species, or when any new vanishingly rare species is added. All of this culminated into a new diversity measure called the **Gini-Simpson Index**, which is calculated as the probability that when two individuals randomly encounter each other, they be different species. This probability of an inter-specific encounter obeys the principle of transfer and can be used to measure the compositional complexity of an ecosystem. 
 
-Another property of an ecosystem that behaves similarly is the probability of the species identity of an individual in a random draw from the community. This probability can be estimated from the relative species abundance by using information theory and is just the **Shannon entropy**. Biologists refer to this as the *Shannon-Weiner Index* and has often been used as a diversity metric. {::nomarkdown}  
+Another property of an ecosystem that behaves in a similar fashion is the probability of the species identity of an individual in a random draw from the community. This probability can be estimated from the relative species abundance by using information theory and is simply the **Shannon entropy**. Biologists refer to this as the *Shannon-Weiner Index* and has often been used as an alternative to the Gini-Simpson or Species Richness indices. 
+{::nomarkdown}  
 \begin{equation}
 \textbf{Species Richness:}\ \ \ \sum_{i=1}^S p_i\\
 \textbf{Gini-Simpson:}\ \ \ 1 - \sum_{i=1}^Sp_i^2 \ \ \ \ \ \ \ \ \ \ \ \ \textbf{Shannon entropy:}\ \ \ -\sum_{i=1}^Sp_i ln p_i\\
@@ -41,7 +42,7 @@ Another property of an ecosystem that behaves similarly is the probability of th
 \begin{align} \textit{Where each species is indexed $i = 1,2,\cdots, S$ with relative abundance $p_i$} \end{align}
 {:/}  
                                             
-Each of these three diversity measures have quite different units and mathematical properties, so they cannot be directly compared with each other. Indeed, comparisons and ratios of the same index on two samples could be misleading, as both the Shannon and Simpson indices are non-linear. In the late 1990s, master formulas that generated each of these diversity indices began appearing from varying disciplines. A key breakthrough came from Ecologist Mark Hill, who realized that all these master formulas could be transformed so that they generate a family of measures with an easily interpretable metric. 
+Each of these three diversity measures have quite different units and mathematical properties, which abstracts direct comparison with each other. Even ratios of the same index on two samples could be misleading, as both the Shannon and Simpson indices are non-linear in nature. However, in the late 1990s, unifying master formulas that generated each of these diversity indices began appearing from varying disciplines. A key breakthrough came from Ecologist Mark Hill, who realized that all these master formulas could be transformed as to generate a family of measures with an easily interpretable metric. 
 
 ### Hill Numbers 
 
@@ -54,19 +55,19 @@ Each of these three diversity measures have quite different units and mathematic
 \end{equation}
 {:/}
 
-**Hill Numbers** are in units of *effective number of species* and is a function of the parameter $q$. This parameter determines the sensitivity to species relative abundance. The traditional biodiversity metrics can be found with simple transformations and by setting $q$ with *Species Richness (q=0), Gini-Simpson (q=1)*, and *Shannon entropy (q=2)*. It was found that this measurement of diversity obey another principle key in Economics - the *replication principle*: if we pool $N$ equally large, equally diverse communities with NO shared species, the diversity of this pooled community should be $N$ times the diversity of a single community. This now solves the previous problems of ratios and comparisons with the Shannon entropy and Gini-Simpsons indices, and supports the rules of inference used by Biologists. In addition to species richness and relative abundance, Hill numbers have recently been generalized to incorporate phylogentic distances as well. Hill numbers, or the effective number of species best quantifies certain concepts of diversity, particularly species and taxonomic. Many of the R packages commonly used for diversity analysis make direct use of Hill numbers. 
+**Hill Numbers** are in units of *effective number of species* and is a function of the the observed relative abundance $p_i$ and the user-determined parameter $q$. This parameter primarily dictates the formula's sensitivity to species relative abundance. The traditional biodiversity metrics can be found with simple transformations and setting $q$. We have *Species Richness (q=0), Gini-Simpson (q=1)*, and *Shannon entropy (q=2)*. It was found that this measurement of diversity obey another principle previously found in Economics - the *replication principle*. This states that if we pool $N$ equally large, equally diverse communities with NO shared species, the diversity of this pooled community should be $N$ times the diversity of a single community. This now solves the previous problems of ratios and comparisons with the Shannon entropy and Gini-Simpsons indices, and supports the rules of inference used by Biologists. In addition to species richness and relative abundance, Hill numbers have recently been generalized to incorporate phylogentic distances as well. Hill numbers, or the effective number of species best quantifies certain concepts of diversity, particularly species and taxonomic. Many of the R packages commonly used for diversity analysis make direct use of Hill numbers. 
 
 ## Assessing Biodiversity in R
 
-To better understand how we can assess diversity in R, let's consider an example with artificial set of data pertaining to bat species in from ten sites in subtropical Africa. Sites 1-6 are geographically clustered near an inselberg structure, while sites 7-10 are distant, but close to each other. Our goal is to compare metrics of diversity between the two general transects - one NEAR and another DISTANT from the inselberg. At each site, bats were captured, tagged, and number of variables recorded. Here's a glimpse at some of the data...
+To better understand how we can estimate and evaluate diversity measures in R, let's consider an example with an artificial set of data pertaining to species of bats from ten trapping sites in subtropical Africa. Sites numbered 1-6 are geographically clustered near an inselberg structure, while sites 7-10 are distant from the inselberg, but close to each other. Our goal is to compare metrics of bat biodiversity between two transects - one NEAR and another DISTANT from the inselberg. These transects are a pooling of data found at sites 1-6 and 7-10, respoectively. At each site, bats were captured, tagged, and number of variables recorded. Here's a glimpse at some of the data...
 
 ![](/img/posts/batdata.png){: width="700" style="display:block; margin-left:auto; margin-right:auto"}
 
-Here we can observe six of the 36 species used in this study, along with several variables pertaining to functional diversity, such as Foraging Mode, and Roosting. Don't worry about how to interpret any particular scores in this data set just yet. Instead, let's begin by examining Taxonomic diversity between the transects. 
+Here we identify six of the 36 species used in this study, along with several observed variables pertaining to functional diversity, such as Foraging Mode, and Roosting. Don't worry about how to interpret any particular scores in this data set just yet. Instead, let's begin by examining Taxonomic diversity between the transects. 
 
 ### Alpha Taxonomic Diversity 
 
-**iNEXT** (INterpolation and EXTrapolation) is a package in R that provides simple functions to compute estimates of Hill numbers with their associated R/E (rarefaction/extrapolation) curves. *Abundance* data, a type of biodiversity data, is used by iNEXt to make these calculations. This is essentially a list of the total count of each species observed, and accepted as a matrix input. A glimpse at the abundance matrix of our total sample data is shown below. 
+**iNEXT** (INterpolation and EXTrapolation) is a package in R that provides simple functions to compute estimates of Hill numbers with their associated R/E (rarefaction/extrapolation) curves. *Abundance* data, a type of biodiversity data, is input into iNEXt to make these calculations. This is essentially a list of the total count of each species observed, and accepted as a matrix input. A glimpse at the abundance matrix of our total sample data is shown below. 
 
 ![](/img/posts/abuntable1.png){: width = "400" style="display:block; margin-left:auto; margin-right:auto"}
 
@@ -131,7 +132,7 @@ inselberg.dist$AsyEst
 
 ### Alpha Functional Diversity 
 
-Functional diversity is based on the use of functional species traits which are defined as biological attributes that influence organismal performance. This aims at taking a functional approach to community ecology, *independent of taxonomy*. A step beyond species richness, functional diversity is a powerful tool to link community composition to ecosystem properties. Typically, we split functional diversity into three independent facets - Richness, Evenness, and Divergence, as proposed by Villéger, et. al. 
+Functional diversity is based on using functional species traits. These are defined as biological attributes that influence organismal performance and aims at taking a functional approach to community ecology, *independent of taxonomy*. A step beyond species richness, functional diversity is a powerful tool to link community composition to ecosystem properties. Typically, we split functional diversity into three independent facets - Richness, Evenness, and Divergence, as proposed by Villéger, et. al. 
 
 Functional richness can be thought of as the amount of niche space occupied by the species within a community. Functional evenness is considered a measure of the regularity of the distribution of functional richness within this niche space. Alternatively, functional divergence refers to the divergence of the distribution of functional richness in this common space. 
 
@@ -199,14 +200,16 @@ dplyr::arrange(fd_fric(traits_bat, sites_bat),FRic)
 </figure>
 </center>
 
-We clearly see differences in the magnitude of functional richness estimates. Unlike iNEXT with taxonomic diversity estimates, fundiversity does not have a built-in bootstrapping feature to make inference. So, we will construct our own bootstrapped distribution on each site and construct 95% confidence intervals for comparison. To construct this bootstrapped distribution, we will repeatedly sample from our data, *with replacement*, and probabilities proportional to the relative abundance of each species within the study. More refined methods of bootstrapping based on relative abundance from each site may improve methods. We briefly display the relative proportions. 
+We clearly see differences in the magnitude of functional richness estimates. Unlike iNEXT with taxonomic diversity estimates, fundiversity does not have a built-in bootstrapping feature to make inference. So, we will construct our own bootstrapped distribution on each site and construct $95^{th}$ percentile intervals for comparison. To construct the bootstrapped sampling distribution, we will repeatedly sample from our data, *with replacement*. We will sample following a multinomial distribution, with probabilities estimated by the observed relative abundance. More refined methods of bootstrapping based on multinomial probabilities determined from each site may improve methods. We briefly display the observed relative proportions. 
 
 <center>
 <figure>
 <img src = "/img/posts/relabun.png" width = 350 >
 </figure>
 </center>
+
 And develop the bootstrapped distribution, with B = 1000 samples each of size n =100. The following code generates a $36\times1000$ matrix. Each column represents a sample of our 36 species of bats. In each sample of $n=100$, if a bat species was selected more than once, it remained a '1' as a count matrix. From this counts matrix, we sampled species from our species by traits matrix, and used this calculate the new FRic metric. 
+
 ```{r}
 3Establishing the multinomial sampling distribution
 B = 1000;
@@ -253,14 +256,14 @@ ggplot(data = boot.est.dist, aes(x = site,y = FRic, color = site)) +
 <img src = "/img/posts/funrichbox.png" width = 750>
 </figure>
 </center>
-We observe that there is overlap in the 95% intervals, indicating there is no significant difference in functional richeness between sites. We can pool the data by transect and observe similar results.
+We observe that there is overlap in the $95^{th}$ percentile intervals, indicating there is no significant difference in functional richeness between sites. We can pool the data by transect and we notice similar results.
 <center>
 <figure>
 <img src = "/img/posts/funrichtrans.png" width = 750>
 </figure>
 </center>
 
-Again, we observe overlap in the plots and cannot conclude any significant difference in functional richness between transects near the inselberg and distant from the inselberg. 
+Again, we have overlap in the plots and cannot conclude a significant difference in functional richness between transects near the inselberg compared to those distant. 
 
 We follow a similar logic and present graphs for functional evenness and divergence. 
 
@@ -288,11 +291,11 @@ We follow a similar logic and present graphs for functional evenness and diverge
 </figure>
 </center>
 
-From these we observe no significant difference in functional divergence indices. Regardless, we have gained useful insight into the nature of these estimates at given sites and transects. 
+From these we observe no significant difference in functional divergence indices between sites, nor between transects. Regardless, we have gained useful insight into the nature of these estimates within and between sites and transects.
 
 ### Beta Diversity
 
-Beta diversity is generally thought of as the variation in species composition between sites. It can be the result of species replacement between sites (turnover) and species loss from site to site (nestedness). We can use the **betapart** package in R to compute total dissimilarity (Beta diversity) as Sørensen or Jaccard indices, as well as their respective turnover and nestedness components. With the *betasample()* function, we can establish a distribution of multi-site beta dissimilarity values from a randomized sample, and partition total dissimilarity into the independent turnover and nestedness components. The code and results for comparing the two inselberg transects are displayed below. 
+Beta diversity is generally thought of as the variation in species composition between sites. It can be the result of species replacement between sites (turnover) and species loss from site to site (nestedness). We can use the **betapart** package in R to compute total dissimilarity (Beta diversity) as Sørensen or Jaccard indices. Additionally, we can their respective turnover and nestedness components. The *betasample()* function allows us to automatically establish a distribution of multi-site beta dissimilarity values from a randomized sample, and partition total dissimilarity into the independent turnover and nestedness components. The code and results for comparing the two inselberg transects are displayed below. 
 
 ```{r}
 #Establish species by site matrices for each transect
@@ -335,9 +338,9 @@ We can see that difference in total beta dissimilarity may be significant, as th
 
 ### Alpha Phylogenetic Diversity 
 
-I saved this diversity metric for the end, because we are going to step away from our bat example to demonstrate these methods. This is because metrics of this diversity primarily involve calculating phylogenetic distances of species. This distance is essentially the relative length on an evolutionary tree. Resources, such as GenBank and datasets in R, often provide the genetic information necessary to build these phylogeny trees. However, this data was not available yet for the species pertaining to our previous example. As of now, this is not particularly uncommon as the bank of ecophylogenetic information is still expanding. Instead, we will use a general dataset called "phylocom" provided in the R package **picante**. This package includes functions for analyzing the phylogenetic and trait diversity of ecological communities, comparative analyses, and the display and manipulation of phenotypic and phylogenetic data.
+I saved this diversity metric for the end, because we are going to step away from our bat example in order to demonstrate these methods. This is because metrics of this diversity primarily involve calculating phylogenetic distances of species. This distance is essentially the relative length on an evolutionary tree. Resources, such as GenBank or built-in datasets in R, often provide the genetic information necessary to build these phylogeny trees. However, this data was not available yet for the species pertaining to our previous example. As of now, this is not particularly uncommon, as banks of ecophylogenetic information is still expanding. Instead, we will use a general dataset called "phylocom" provided in the R package **picante**. This package includes functions for analyzing the phylogenetic and trait diversity of ecological communities, comparative analyses, and the display and manipulation of phenotypic and phylogenetic data.
 
-Phylocom contains samples of three objects types accepted by picante. The first, 'phylo', is phylogenetic data called a *phylo* object in R. Picante uses the *phylo* format implemented in the **ape** package in R to represent phylogenetic relationships among given taxa. Let's take a quick peak at the information contained in this type of data.
+Phylocom contains samples of the three object types accepted by picante. The first, 'phylo', is phylogenetic data called a *phylo* object in R. Picante uses the *phylo* format established in the R package **ape** to represent phylogenetic relationships among given taxa. Let's take a quick peak at the information contained in this type of data.
 
 ```
 Phylogenetic tree with 32 tips and 31 internal nodes.
@@ -349,7 +352,7 @@ Node labels:
 
 Rooted; includes branch lengths.
 ```
-From this, one can establish and plot a phylogenetic tree. Phylocom also contains community data, as formatted in the package **vegan**. Named 'sample', this is data matrix with sites/samples in the rows and taxa in the columns, like the aforementioned species by site presence/absence matrices. We must be sure that these column taxa names exactly match those of the species found in the corresponding phylogenetic data. Finally, our third element called 'traits' is traits data as we have already seen - taxa in rows and community traits in columns. Again, we wary of matching species names. If we choose, we can now visulize the provided data. 
+From this, one can plot and manipulate a phylogenetic tree. Phylocom also contains community data, as formatted in the package **vegan**. Named 'sample', this is data matrix with sites/samples in the rows and taxa in the columns, similar to the previously examined species by site matrices. We must be sure that these column taxa names exactly match those of the species found in the corresponding phylogenetic data. Finally, our third element called 'traits' is traits data as we have already seen - taxa in rows and community traits in columns. Again, we wary of matching species names. If we choose, we can now visulize the provided data. 
 
 We can visualize how taxa from six communities in this data set are arranged on the tree. First, we need to prune the phylogeny to only include the species at hand. Let's examine the 'sample' data dendrogram, where black dots represent species present in each of the six sommunty samples. 
 
