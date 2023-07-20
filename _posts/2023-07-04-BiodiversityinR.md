@@ -2,7 +2,8 @@
 layout: post
 title: Analyzing Biodiversity in R
 subtitle: What the Programming Language Could Do for Biologists 
-date: '2023-07-04 12:47:00 -08:00'
+author: R. Travis Merrill 
+date: '2023-07-19 12:47:00 -08:00'
 background: '/img/posts/biodiversity.png'
 full-width: true
 ---
@@ -431,7 +432,9 @@ Clearly, previously used methods of bootstrapping can be used for comparison inf
 
 ## Conclusion
 
- Biodiversity is a major factor taken into consideration when allocating resources for conservation efforts. It is critical to have a solid understanding of diversity metrics and methods of analysis. Many of the metrics discussed in this article, such as Hill numbers, have only been developed in the past few decades. Hence, biodiversity assessment and analysis is an ever-evolving field as the underlying theories and mathematics graduate to incorporate more facets. Thank you so much for your time and please feel free to reach out to me! 
+ Biodiversity is a major factor taken into consideration when allocating resources for conservation efforts. It is critical to have a solid understanding of diversity metrics and methods of analysis. Many of the metrics discussed in this article, such as Hill numbers, have only been developed in the past few decades. Hence, biodiversity assessment and analysis is an ever-evolving field as the underlying theories and mathematics graduate to incorporate more facets. 
+
+ **- R. Travis Merrill** *is a Statistician and would love to* <a href = "mailto: rtravismerrill87@gmail.com?subject=Biodiversity%20in%20R">*hear your feedback.*</a>
 
 ## References 
 
