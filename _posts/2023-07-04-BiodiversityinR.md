@@ -69,15 +69,15 @@ Each of these three diversity metrics have quite different units and mathematica
 
 ## Assessing Biodiversity in R
 
-R has numerous packages developed specifically to analyze biological and ecological data. To better understand how we can estimate and evaluate diversity measures in R, let's consider an example with an artificial set of data pertaining to species of bats from ten trapping sites in subtropical Africa. Sites numbered 1-6 are geographically clustered near an inselberg structure, while sites 7-10 are distant from the inselberg, but close to each other. Our goal is to compare metrics of bat biodiversity between two transects - one NEAR and another DISTANT from the inselberg. These transects are a pooling of data found at sites 1-6 and 7-10, respoectively. At each site, bats were captured, tagged, and number of variables recorded. Here's a glimpse at some of the data...
+R has numerous packages developed specifically to analyze biological and ecological data. To better understand how we can estimate and evaluate diversity measures in R, let's consider an example with an artificial set of data pertaining to species of bats from ten trapping sites in subtropical Africa. Sites numbered 1-6 are geographically clustered near an inselberg structure, while sites 7-10 are distant from the inselberg, but close to each other. Our goal is to compare metrics of bat biodiversity between two transects - one NEAR and another DISTANT from the inselberg. These transects are data found at sites 1-6 and 7-10, pooled respectively. At each site, bats were captured, tagged, and number of variables recorded. Here's a glimpse at some of the data...
 
 ![](/img/posts/batdata.png){: width="700" style="display:block; margin-left:auto; margin-right:auto"}
 
-Here we identify six of the 36 species used in this study, along with several observed variables pertaining to functional diversity, such as Foraging Mode, and Roosting. Don't worry about how to interpret any particular scores in this data set just yet. Instead, let's begin by examining Taxonomic diversity between the transects. 
+Here, we identify six of the 36 species used in this study, along with several observed variables pertaining to functional diversity, such as Foraging Mode, and Roosting. Don't worry about how to interpret any particular scores in this data set just yet. Instead, let's begin by examining Taxonomic diversity between the transects. 
 
 ### Alpha Taxonomic Diversity 
 
-**iNEXT** (INterpolation and EXTrapolation) is a package in R that provides simple functions to compute estimates of Hill numbers with their associated R/E (rarefaction/extrapolation) curves. *Abundance* data, a type of biodiversity data, is input into iNEXt to make these calculations. This is essentially a list of the total count of each species observed, and accepted as a matrix input. A glimpse at the abundance matrix of our total sample data is shown below. 
+**iNEXT** (INterpolation and EXTrapolation) is a package in R that provides simple functions to compute estimates of Hill numbers with their associated rarefaction/extrapolation (R/E) curves. *Abundance* data, a type of biodiversity data, is inputed into iNEXT to make these calculations. This is essentially a list of the total count of each species observed, and accepted in matrix form. A glimpse at the abundance matrix of our total sample data is shown below. 
 
 ![](/img/posts/abuntable1.png){: width = "400" style="display:block; margin-left:auto; margin-right:auto"}
 
@@ -130,7 +130,7 @@ ggiNEXT(inselberg.dist, type = 2, se = TRUE)
 
 ![](/img/posts/sampcompl.png){: style="display:block; margin-left:auto; margin-right:auto" height = "100"}
 
-The nature of these curves tell us the ecoregion near the inselberg has greater potential for numerous individuals for the same or differing species. 
+The nature of these curves tell us the ecoregion near the inselberg has greater potential for numerous individuals of the same or differing species. 
 
 The iNEXT package also has convenient functions for tabular display of output information from the  iNEXT object. 
 
@@ -142,11 +142,11 @@ inselberg.dist$AsyEst
 
 ### Alpha Functional Diversity 
 
-Functional diversity is based on using functional species traits. These are defined as biological attributes that influence organismal performance and aims at taking a functional approach to community ecology, *independent of taxonomy*. A step beyond species richness, functional diversity is a powerful tool to link community composition to ecosystem properties. Typically, we split functional diversity into three independent facets - Richness, Evenness, and Divergence, as proposed by Villéger, et. al. 
+Functional diversity is based on using functional species traits. These are defined as biological attributes that influence organismal performance and aims at taking a functional approach to community ecology, *independent of taxonomy*. A step beyond species richness, functional diversity is a powerful concept that links community composition to ecosystem properties. Typically, we split functional diversity into three independent facets - Richness, Evenness, and Divergence.
 
 Functional richness can be thought of as the amount of niche space occupied by the species within a community. Functional evenness is considered a measure of the regularity of the distribution of functional richness within this niche space. Alternatively, functional divergence refers to the divergence of the distribution of functional richness in this common space. 
 
-Here, our data contain many previously mentioned functional characteristics of our bat species, such as body weight, roosting strategy, and foraging range. The R package **fundiversity** is designed to ease the ease the burdensome computations associated with classical indices of functional diversity. Each function available in this package computes a single index with two main inputs - a species by traits matrix and a site by species matrix. 
+Here, our data contain many previously mentioned functional characteristics of our bat species, such as body weight, roosting strategy, and foraging range. The R package **fundiversity** is designed to ease the burdensome computations associated with classical indices of functional diversity. Each function available in this package computes a single index with two main inputs - a species by traits matrix and a site by species matrix. 
 
 A species by traits matrix is structured to have species as the row names and functional traits as the columns. A site by species matrix is designed to have sites by row and species by column. This is demonstrated below for our data. 
 
@@ -305,7 +305,7 @@ From these we observe no significant difference in functional divergence indices
 
 ### Beta Diversity
 
-Beta diversity is generally thought of as the variation in species composition between sites. It can be the result of species replacement between sites (turnover) and species loss from site to site (nestedness). We can use the **betapart** package in R to compute total dissimilarity (Beta diversity) as Sørensen or Jaccard indices. Additionally, we can their respective turnover and nestedness components. The *betasample()* function allows us to automatically establish a distribution of multi-site beta dissimilarity values from a randomized sample, and partition total dissimilarity into the independent turnover and nestedness components. The code and results for comparing the two inselberg transects are displayed below. 
+Beta diversity is generally thought of as the variation in species composition between sites. It can be the result of species replacement between sites (turnover) and species loss from site to site (nestedness). We can use the **betapart** package in R to compute total dissimilarity (Beta diversity) as Sørensen or Jaccard indices. Additionally, we can determine their respective turnover and nestedness components. The *betasample()* function allows us to automatically establish a distribution of multi-site beta dissimilarity values from a randomized sample, and partition total dissimilarity into the independent turnover and nestedness components. The code and results for comparing the two inselberg transects are displayed below. 
 
 ```{r}
 #Establish species by site matrices for each transect
@@ -348,7 +348,7 @@ We can see that difference in total beta dissimilarity may be significant, as th
 
 ### Alpha Phylogenetic Diversity 
 
-We save this diversity metric for the end, because we are going to step away from our bat example in order to demonstrate these methods. This is because metrics of this diversity primarily involve calculating phylogenetic distances of species. This distance is essentially the relative length on an evolutionary tree. Resources, such as GenBank or built-in datasets in R, often provide the genetic information necessary to build these phylogeny trees. However, this data was not available yet for the species pertaining to our previous example. As of now, this is not particularly uncommon, as banks of ecophylogenetic information is still expanding. Instead, we will use a general dataset called "phylocom" provided in the R package **picante**. This package includes functions for analyzing the phylogenetic and trait diversity of ecological communities, comparative analyses, and the display and manipulation of phenotypic and phylogenetic data.
+We save this diversity metric for the end, because we are going to step away from our bat example in order to demonstrate these methods. This is because metrics of this diversity primarily involve calculating phylogenetic distances of species. This distance is essentially the relative length on an evolutionary tree. Resources, such as GenBank or built-in datasets in R, often provide the genetic information necessary to build these phylogeny trees. However, this data was not available yet for the species pertaining to our previous example. Currently, this is not particularly uncommon, as banks of ecophylogenetic information is still expanding. Instead, we will use a general dataset called "phylocom" provided in the R package **picante**. This package includes functions for analyzing the phylogenetic and trait diversity of ecological communities, comparative analyses, and the display and manipulation of phenotypic and phylogenetic data.
 
 Phylocom contains samples of the three object types accepted by picante. The first, 'phylo', is phylogenetic data called a *phylo* object in R. Picante uses the *phylo* format established in the R package **ape** to represent phylogenetic relationships among given taxa. Let's take a quick peak at the information contained in this type of data.
 
