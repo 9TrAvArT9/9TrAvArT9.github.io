@@ -7,7 +7,7 @@ date: '2023-07-19 12:47:00 -08:00'
 background: '/img/posts/biodiversity.png'
 full-width: true
 ---
-
+<h2 id = "Top"></h2>
 <style type="text/css">
   p {
     width: 900px;
@@ -432,7 +432,7 @@ Clearly, previously used methods of bootstrapping can be used for comparison inf
 
 ## Conclusion
 
- Biodiversity is a major factor taken into consideration when allocating resources for conservation efforts. It is critical to have a solid understanding of diversity metrics and methods of analysis. Many of the metrics discussed in this article, such as Hill numbers, have only been developed in the past few decades. Hence, biodiversity assessment and analysis is an ever-evolving field as the underlying theories and mathematics graduate to incorporate more facets. 
+ Biodiversity is a major factor taken into consideration when allocating resources for conservation efforts. It is critical to have a solid understanding of diversity metrics and methods of analysis. Many of the metrics discussed in this article, such as Hill numbers, have only been developed in the past few decades. Hence, biodiversity assessment and analysis is an ever-evolving field as the underlying theories and mathematics graduate to incorporate more facets. The statistical software R is adapting alongside this field, and continues to improve its already fantastic capabilities. 
 
  **- R. Travis Merrill** *is a Statistician and would love to* <a href = "mailto: rtravismerrill87@gmail.com?subject=Biodiversity%20in%20R">*hear your feedback.*</a>
 
@@ -479,3 +479,5 @@ ECOLOGY.” Ecology 89 (8): 2290–2301. <a href = "https://doi.org/10.1890/07-1
 
 Violle, Cyrille, Marie-Laure Navas, Denis Vile, Elena Kazakou, Claire Fortunel, Irène Hummel, and
 Eric Garnier. 2007. “Let the Concept of Trait Be Functional!” Oikos 116 (5): 882–92. <a href = "https://doi.org/10.1111/j.0030-1299.2007.15559.x" target = "_blank"> https://doi.org/10.1111/j.0030-1299.2007.15559.x</a>.
+
+<a href = "#Top">Back to the top.</a>
